@@ -1,0 +1,109 @@
+---
+const stack = ['Node.js', 'Python', 'PostgreSQL', 'Docker', 'AWS', 'React'];
+---
+
+<section id="inicio" class="relative mx-auto max-w-5xl px-6 pb-20 pt-16 sm:pt-24">
+  <div class="grid gap-14 sm:grid-cols-2 sm:items-center sm:gap-10">
+    <!-- Columna de texto -->
+    <div>
+      <p class="mb-5 font-mono text-sm text-amber">Desarrollador Full Stack — Backend</p>
+
+      <h1 class="text-4xl font-semibold leading-[1.15] text-paper sm:text-5xl">
+        Construyo sistemas que siguen en pie a las 3 de la mañana.
+      </h1>
+
+      <p class="mt-6 max-w-prose text-base leading-relaxed text-muted">
+        Soy Esteban Yemes, desarrollador de software enfocado en backend: APIs,
+        bases de datos y la infraestructura que las sostiene. Me interesa el
+        código que es fácil de mantener tanto como el que funciona el primer día.
+      </p>
+
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a
+          href="#proyectos"
+          class="rounded-sm bg-amber px-5 py-2.5 text-sm font-medium text-ink transition-colors hover:bg-amber-dim"
+        >
+          Ver proyectos
+        </a>
+        <a
+          href="#contacto"
+          class="rounded-sm border border-line px-5 py-2.5 text-sm font-medium text-paper transition-colors hover:border-amber"
+        >
+          Escribime
+        </a>
+      </div>
+
+      <ul class="mt-10 flex flex-wrap gap-x-5 gap-y-2">
+        {stack.map((tech) => (
+          <li class="text-sm text-muted">{tech}</li>
+        ))}
+      </ul>
+    </div>
+
+    <!-- Terminal -->
+    <div class="rounded-sm border border-line bg-panel shadow-none">
+      <div class="flex items-center gap-1.5 border-b border-line px-4 py-3">
+        <span class="h-2.5 w-2.5 rounded-full bg-line"></span>
+        <span class="h-2.5 w-2.5 rounded-full bg-line"></span>
+        <span class="h-2.5 w-2.5 rounded-full bg-line"></span>
+        <span class="ml-2 font-mono text-xs text-muted">bash — zsh</span>
+      </div>
+      <pre
+        id="terminal-output"
+        class="min-h-[220px] overflow-x-auto whitespace-pre-wrap break-words p-5 font-mono text-[13px] leading-relaxed text-paper"
+      ></pre>
+    </div>
+  </div>
+</section>
+
+<script>
+  const lines = [
+    { text: '$ whoami', pause: 400 },
+    { text: 'nombre-apellido — backend developer', pause: 500, dim: true },
+    { text: '', pause: 200 },
+    { text: '$ cat status.json', pause: 400 },
+    { text: '{ "disponible": true, "uptime": "99.9%" }', pause: 500, dim: true },
+    { text: '', pause: 200 },
+    { text: '$ echo $NEXT_STEP', pause: 400 },
+    { text: 'hablemos de tu proyecto', pause: 0, dim: true },
+  ];
+
+  const el = document.getElementById('terminal-output');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function renderStatic() {
+    if (!el) return;
+    el.textContent = lines.map((l) => l.text).join('\n');
+  }
+
+  async function typeLine(line: { text: string; dim?: boolean }) {
+    if (!el) return;
+    const span = document.createElement('span');
+    if (line.dim) span.classList.add('text-muted');
+    el.appendChild(span);
+
+    for (const char of line.text) {
+      span.textContent += char;
+      await new Promise((r) => setTimeout(r, 14));
+    }
+    el.appendChild(document.createTextNode('\n'));
+  }
+
+  async function run() {
+    if (!el) return;
+    if (reduceMotion) {
+      renderStatic();
+      return;
+    }
+    el.textContent = '';
+    for (const line of lines) {
+      await typeLine(line);
+      await new Promise((r) => setTimeout(r, line.pause));
+    }
+    const caret = document.createElement('span');
+    caret.className = 'caret';
+    el.appendChild(caret);
+  }
+
+  run();
+</script>

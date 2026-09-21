@@ -1,0 +1,82 @@
+---
+const links = [
+  { href: '#proyectos', label: 'Proyectos' },
+  { href: '#contacto', label: 'Contacto' },
+];
+---
+
+<header class="relative z-20 border-b border-line">
+  <div class="mx-auto flex max-w-5xl items-center justify-between px-6 py-5">
+    <a href="#inicio" class="font-mono text-sm text-paper hover:text-amber transition-colors">
+      Esteban.dev
+    </a>
+    <nav class="hidden gap-8 sm:flex">
+      {links.map((link) => (
+        <a
+          href={link.href}
+          class="text-sm text-muted hover:text-paper transition-colors"
+        >
+          {link.label}
+        </a>
+      ))}
+    </nav>
+
+    <button
+      id="menu-toggle"
+      class="flex flex-col gap-1.5 sm:hidden"
+      aria-label="Abrir menú"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+    >
+      <span class="h-px w-6 bg-paper transition-transform" id="bar-1"></span>
+      <span class="h-px w-6 bg-paper transition-opacity" id="bar-2"></span>
+      <span class="h-px w-6 bg-paper transition-transform" id="bar-3"></span>
+    </button>
+  </div>
+
+  <nav
+    id="mobile-menu"
+    class="hidden flex-col gap-1 border-t border-line px-6 py-4 sm:hidden"
+  >
+    {links.map((link) => (
+      <a
+        href={link.href}
+        class="py-2 text-sm text-muted hover:text-paper transition-colors"
+      >
+        {link.label}
+      </a>
+    ))}
+  </nav>
+</header>
+
+<script>
+  const toggle = document.getElementById('menu-toggle');
+  const menu = document.getElementById('mobile-menu');
+  const bar1 = document.getElementById('bar-1');
+  const bar2 = document.getElementById('bar-2');
+  const bar3 = document.getElementById('bar-3');
+
+  let open = false;
+
+  toggle?.addEventListener('click', () => {
+    open = !open;
+    menu?.classList.toggle('hidden', !open);
+    menu?.classList.toggle('flex', open);
+    toggle.setAttribute('aria-expanded', String(open));
+
+    bar1?.classList.toggle('rotate-45');
+    bar1?.classList.toggle('translate-y-[7px]');
+    bar2?.classList.toggle('opacity-0');
+    bar3?.classList.toggle('-rotate-45');
+    bar3?.classList.toggle('-translate-y-[7px]');
+  });
+
+  menu?.querySelectorAll('a').forEach((a) => {
+    a.addEventListener('click', () => {
+      open = false;
+      menu.classList.add('hidden');
+      menu.classList.remove('flex');
+      toggle?.setAttribute('aria-expanded', 'false');
+    });
+  });
+</script>

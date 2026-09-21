@@ -1,0 +1,123 @@
+---
+const email = 'yemesesteban@gmail.com';
+const social = [
+  { label: 'GitHub', href: 'https://github.com/Tebanqito' },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/esteban-yemes-024987234' },
+];
+---
+
+<section id="contacto" class="border-t border-line">
+  <div class="mx-auto grid max-w-5xl gap-12 px-6 py-20 sm:grid-cols-2 sm:gap-10">
+    <div>
+      <h2 class="text-2xl font-semibold text-paper sm:text-3xl">Contacto</h2>
+      <p class="mt-3 max-w-prose text-sm leading-relaxed text-muted">
+        ¿Tenés un proyecto backend, una API que necesita cariño o un sistema
+        que hay que hacer escalar? Escribime y lo hablamos.
+      </p>
+
+      <div class="mt-8 flex flex-col gap-2">
+        <a
+          href={`mailto:${email}`}
+          class="text-sm text-paper underline decoration-line underline-offset-4 hover:decoration-amber"
+        >
+          {email}
+        </a>
+        {social.map((s) => (
+          <a
+            href={s.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-sm text-muted hover:text-paper transition-colors"
+          >
+            {s.label}
+          </a>
+        ))}
+      </div>
+    </div>
+
+    <form id="contact-form" novalidate class="flex flex-col gap-4">
+      <div>
+        <label for="name" class="mb-1.5 block text-xs text-muted">Nombre</label>
+        <input
+          id="name"
+          name="name"
+          type="text"
+          class="w-full rounded-sm border border-line bg-panel px-3 py-2.5 text-sm text-paper outline-none focus:border-amber"
+        />
+        <p class="mt-1 hidden text-xs text-amber" data-error="name">Contanos tu nombre.</p>
+      </div>
+
+      <div>
+        <label for="email" class="mb-1.5 block text-xs text-muted">Email</label>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          class="w-full rounded-sm border border-line bg-panel px-3 py-2.5 text-sm text-paper outline-none focus:border-amber"
+        />
+        <p class="mt-1 hidden text-xs text-amber" data-error="email">Ingresá un email válido.</p>
+      </div>
+
+      <div>
+        <label for="message" class="mb-1.5 block text-xs text-muted">Mensaje</label>
+        <textarea
+          id="message"
+          name="message"
+          rows="4"
+          class="w-full resize-none rounded-sm border border-line bg-panel px-3 py-2.5 text-sm text-paper outline-none focus:border-amber"
+        ></textarea>
+        <p class="mt-1 hidden text-xs text-amber" data-error="message">Contanos un poco más.</p>
+      </div>
+
+      <button
+        type="submit"
+        class="mt-2 self-start rounded-sm bg-amber px-5 py-2.5 text-sm font-medium text-ink transition-colors hover:bg-amber-dim"
+      >
+        Enviar mensaje
+      </button>
+
+      <p id="form-status" class="text-sm" role="status" aria-live="polite"></p>
+    </form>
+  </div>
+</section>
+
+<script>
+  const form = document.getElementById('contact-form') as HTMLFormElement | null;
+  const status = document.getElementById('form-status');
+
+  function showError(field: string, show: boolean) {
+    const el = form?.querySelector(`[data-error="${field}"]`);
+    el?.classList.toggle('hidden', !show);
+  }
+
+  function isValidEmail(value: string) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+  }
+
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!status) return;
+
+    const data = new FormData(form);
+    const name = String(data.get('name') || '').trim();
+    const email = String(data.get('email') || '').trim();
+    const message = String(data.get('message') || '').trim();
+
+    const nameValid = name.length > 1;
+    const emailValid = isValidEmail(email);
+    const messageValid = message.length > 5;
+
+    showError('name', !nameValid);
+    showError('email', !emailValid);
+    showError('message', !messageValid);
+
+    if (!nameValid || !emailValid || !messageValid) {
+      status.textContent = '';
+      return;
+    }
+
+    status.textContent = `Gracias, ${name}. Te voy a responder a la brevedad.`;
+    status.classList.add('text-ok');
+    form.reset();
+  });
+</script>
